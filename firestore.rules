@@ -1,0 +1,96 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // 1. Global Safety Net (Default-Deny Catch-All)
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Reusable, Hardened Global Helpers
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isEmailVerified() {
+      return isSignedIn() && request.auth.token.email_verified == true;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // 2. Validation Blueprints (Anti-Update-Gap Schema Security)
+    function isValidCompany(data) {
+      return data.userId == request.auth.uid
+        && data.name is string && data.name.size() > 0 && data.name.size() <= 200
+        && (!('cin' in data) || (data.cin is string && data.cin.size() <= 21))
+        && data.type is string && (data.type == 'pvt' || data.type == 'pub' || data.type == 'opc' || data.type == 'sec8' || data.type == 'llp')
+        && data.incorp is string && data.incorp.size() <= 10
+        && data.capital is number && data.capital >= 0
+        && data.isSmall is bool
+        && (!('lastAGMDate' in data) || (data.lastAGMDate is string && data.lastAGMDate.size() <= 10))
+        && (!('opcLastFY' in data) || (data.opcLastFY is string && data.opcLastFY.size() <= 10))
+        && (!('llpLastForm11Date' in data) || (data.llpLastForm11Date is string && data.llpLastForm11Date.size() <= 10))
+        && (!('llpLastForm8Date' in data) || (data.llpLastForm8Date is string && data.llpLastForm8Date.size() <= 10))
+        && data.filedStatus is map
+        && data.customForms is list
+        && data.customForms.size() <= 100
+        && data.savedAt is string && data.savedAt.size() <= 30;
+    }
+
+    function isValidMCANotification(data) {
+      return data.title is string && data.title.size() > 0 && data.title.size() <= 300
+        && data.type is string && (data.type == 'Circular' || data.type == 'Notification' || data.type == 'Order' || data.type == 'News')
+        && data.category is string && data.category.size() <= 100
+        && data.date is string && data.date.size() <= 10
+        && data.description is string && data.description.size() <= 2000
+        && (!('docRef' in data) || (data.docRef is string && data.docRef.size() <= 100))
+        && data.important is bool
+        && data.timestamp is string && data.timestamp.size() <= 30
+        && data.createdBy is string && data.createdBy.size() <= 128;
+    }
+
+    // 3. Document Match Blocks
+    match /companies/{companyId} {
+      // Allow list queries ONLY if explicit owner filtering is enforced
+      allow list: if isSignedIn() && existing().userId == request.auth.uid;
+      
+      allow get: if isSignedIn() && existing().userId == request.auth.uid;
+
+      allow create: if isEmailVerified()
+        && isValidId(companyId)
+        && isValidCompany(incoming())
+        && incoming().userId == request.auth.uid;
+
+      allow update: if isEmailVerified()
+        && isValidId(companyId)
+        && isValidCompany(incoming())
+        && existing().userId == request.auth.uid
+        && incoming().userId == existing().userId; // Immortality Rule: User ID is immutable
+
+      allow delete: if isEmailVerified()
+        && existing().userId == request.auth.uid;
+    }
+
+    match /mca_notifications/{notificationId} {
+      allow list: if true;
+      allow get: if true;
+      allow create: if isEmailVerified()
+        && isValidId(notificationId)
+        && isValidMCANotification(incoming());
+      allow update: if isEmailVerified()
+        && isValidId(notificationId)
+        && isValidMCANotification(incoming());
+      allow delete: if isEmailVerified();
+    }
+  }
+}

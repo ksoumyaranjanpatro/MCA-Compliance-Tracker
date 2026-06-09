@@ -1,0 +1,124 @@
+{
+  "entities": {
+    "Company": {
+      "title": "Company Profile",
+      "description": "An MCA company or LLP registration profile being tracked, along with its specific filing statuses and custom event forms.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "Firebase Auth UID of the owner of this company profile"
+        },
+        "name": {
+          "type": "string",
+          "description": "Official company or LLP name"
+        },
+        "cin": {
+          "type": "string",
+          "description": "21-character Corporate Identification Number (CIN) or LLPIN"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["pvt", "pub", "opc", "sec8", "llp"],
+          "description": "Type of corporate entity"
+        },
+        "incorp": {
+          "type": "string",
+          "description": "Date of incorporation (YYYY-MM-DD)"
+        },
+        "capital": {
+          "type": "number",
+          "description": "Paid-up capital or contribution amount in INR"
+        },
+        "isSmall": {
+          "type": "boolean",
+          "description": "Whether the company is classified as a Small Company"
+        },
+        "lastAGMDate": {
+          "type": "string",
+          "description": "Date of the last held AGM (YYYY-MM-DD)"
+        },
+        "opcLastFY": {
+          "type": "string",
+          "description": "Last filed FY for OPC"
+        },
+        "llpLastForm11Date": {
+          "type": "string",
+          "description": "Last filed date for LLP Form 11 (YYYY-MM-DD)"
+        },
+        "llpLastForm8Date": {
+          "type": "string",
+          "description": "Last filed date for LLP Form 8 (YYYY-MM-DD)"
+        },
+        "filedStatus": {
+          "type": "object",
+          "description": "Key-value map of form identifiers and their filing statuses"
+        },
+        "customForms": {
+          "type": "array",
+          "description": "Array of additional/custom event-based filings configured for the company"
+        },
+        "savedAt": {
+          "type": "string",
+          "description": "Date-time string when the profile was saved"
+        }
+      },
+      "required": ["userId", "name", "type", "incorp"]
+    },
+    "MCANotification": {
+      "title": "MCA Official Notification",
+      "description": "An official circular, notification, or order published by the MCA, synced in real-time.",
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "Title of the circular or notification"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["Circular", "Notification", "Order", "News"],
+          "description": "Type of document"
+        },
+        "category": {
+          "type": "string",
+          "description": "Sub-category like Company Law, LLP, Insolvency"
+        },
+        "date": {
+          "type": "string",
+          "description": "Date of announcement (YYYY-MM-DD)"
+        },
+        "description": {
+          "type": "string",
+          "description": "Comprehensive summary or full text of circular"
+        },
+        "docRef": {
+          "type": "string",
+          "description": "Form number or Gazette ID referenced"
+        },
+        "important": {
+          "type": "boolean",
+          "description": "Whether this notification requires urgent reader action"
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "ISO creation time"
+        },
+        "createdBy": {
+          "type": "string",
+          "description": "Auth UID or System keyword"
+        }
+      },
+      "required": ["title", "type", "date", "description", "category", "important", "timestamp", "createdBy"]
+    }
+  },
+  "firestore": {
+    "/companies/{companyId}": {
+      "schema": "Company",
+      "description": "Global collection containing all saved user company compliance records"
+    },
+    "/mca_notifications/{notificationId}": {
+      "schema": "MCANotification",
+      "description": "Real-time feed of official Ministry of Corporate Affairs updates and circulars"
+    }
+  }
+}
