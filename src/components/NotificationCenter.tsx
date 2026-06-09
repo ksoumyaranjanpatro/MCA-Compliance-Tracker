@@ -37,7 +37,7 @@ export default function NotificationCenter({
       const resp = await Notification.requestPermission();
       setPermission(resp);
       if (resp === 'granted') {
-        new Notification("MCA Compliance Tracker", {
+        new Notification("MCA Compliance tracker - Soumya Ranjan", {
           body: "Notifications are successfully enabled! You will receive timely alerts for pending corporate filing milestones.",
           icon: "/favicon.ico",
         });

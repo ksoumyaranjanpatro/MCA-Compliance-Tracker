@@ -459,7 +459,7 @@ export default function App() {
 
     // Push browser notification api context
     if (Notification.permission === 'granted') {
-      new Notification('MCA Compliance Tracker', {
+      new Notification('MCA Compliance tracker - Soumya Ranjan', {
         body: msg,
         icon: '/favicon.ico'
       });

@@ -8,7 +8,7 @@ import { AppLanguage } from './types';
 export const TRANSLATIONS: Record<AppLanguage, Record<string, string>> = {
   en: {
     // Brand & Sidebar
-    appName: "MCA Compliance Tracker",
+    appName: "MCA Compliance tracker - Soumya Ranjan",
     appSub: "Companies Act 2013 • LLP Act 2008 • CCFS-2026",
     navDashboard: "Pending Dashboard",
     navCalculator: "Late Fee Calculator",
@@ -125,7 +125,7 @@ export const TRANSLATIONS: Record<AppLanguage, Record<string, string>> = {
   },
   hi: {
     // Hindi translations
-    appName: "एमसीए अनुपालन ट्रैकर",
+    appName: "MCA Compliance tracker - Soumya Ranjan (एमसीए अनुपालन ट्रैकर)",
     appSub: "कंपनी अधिनियम 2013 • एलएलपी अधिनियम 2008 • सीसीएफएस-2026",
     navDashboard: "लंबित डैशबोर्ड",
     navCalculator: "विलंब शुल्क कैलकुलेटर",
@@ -237,7 +237,7 @@ export const TRANSLATIONS: Record<AppLanguage, Record<string, string>> = {
   },
   ta: {
     // Tamil translations
-    appName: "MCA இணக்க கண்காணிப்பாளர்",
+    appName: "MCA Compliance tracker - Soumya Ranjan (MCA இணக்க கண்காணிப்பாளர்)",
     appSub: "நிறுவனங்கள் சட்டம் 2013 • LLP சட்டம் 2008 • CCFS-2026",
     navDashboard: "நிலுவையில் உள்ள டாஷ்போர்டு",
     navCalculator: "தாமதக் கட்டணக் கால்குலேட்டர்",

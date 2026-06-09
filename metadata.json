@@ -1,5 +1,5 @@
 {
-  "name": "MCA Compliance Tracker",
+  "name": "MCA Compliance tracker - Soumya Ranjan",
   "description": "A comprehensive interactive suite for tracking Companies Act & LLP Act compliances, computing Schedule X delay fee multipliers, and optimizing filings under CCFS-2026 with real-time cloud synchronization.",
   "requestFramePermissions": ["notifications"],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
